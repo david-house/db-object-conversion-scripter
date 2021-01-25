@@ -5,6 +5,21 @@ from stringcase import titlecase, snakecase
 from json import dumps
 
 
+def make_singular(pascal_str: str) -> str:
+    terms = titlecase(pascal_str)
+    blob = TextBlob(terms)
+    singular_terms = [titlecase(part.singularize()) for part in blob.words]
+    return ''.join(singular_terms)
+
+
+def make_snake(pascal_str: str) -> str:
+    return snakecase(pascal_str)
+
+
+def make_singular_snake(pascal_str: str) -> str:
+    return make_snake(make_singular(pascal_str))
+
+
 if __name__ == "__main__":
 
     if len(argv) != 3:
@@ -21,22 +36,10 @@ if __name__ == "__main__":
 
     lines = [line.replace("\r", "").replace("\n", "") for line in lines]
 
-    # for each line in lines:
-    # 1. split into separate words (Title Case)
-    # 2. Make each word singular
-    # 3. Recombine into a string
-    # 4. snake case the string
-    # 5. add to a list
-    # 6. merge input and output lists into a json object map
-    # 7. save json to output file path
-
     output_lines = list()
 
     for word in lines:
-        title_parts = titlecase(word)
-        blob = TextBlob(title_parts)
-        singular_words = [titlecase(part.singularize()) for part in blob.words]
-        output_lines.append(snakecase(''.join(singular_words)))
+        output_lines.append(make_singular_snake(word))
 
     output_json = dumps(dict(zip(lines, output_lines)), indent=4)
 
