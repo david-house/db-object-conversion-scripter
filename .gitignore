@@ -214,3 +214,6 @@ fabric.properties
 # working files not needed
 asdf.txt
 lot.txt
+
+# all idea folder
+.idea/
